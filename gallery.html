@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Shree Developers</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo/Untitled design-7.png">
+    <link rel="shortcut icon" type="image/png" href="logo/Untitled design-7.png">
+    <link rel="apple-touch-icon" href="logo/Untitled design-7.png">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Gallery Carousel Styles */
+        .gallery-carousel-section {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .image-carousel-container {
+            position: relative;
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding: 2rem 0;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 2rem;
+            animation: infiniteSlide 40s linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes infiniteSlide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .carousel-slide {
+            flex-shrink: 0;
+            width: 350px;
+            height: 250px;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .carousel-slide:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(230, 57, 70, 0.3);
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .slide-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: white;
+            padding: 2rem;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide:hover .slide-info {
+            transform: translateY(0);
+        }
+
+        .slide-info h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .slide-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Pause animation on hover */
+        .image-carousel-container:hover .carousel-track {
+            animation-play-state: paused;
+        }
+
+        /* Carousel Controls */
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            transform: translateY(-50%);
+            z-index: 15;
+            padding: 0 2rem;
+        }
+
+        .carousel-btn {
+            background: linear-gradient(135deg, #e6394a, #c1121f);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3);
+        }
+
+        .carousel-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(230, 57, 70, 0.5);
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 3rem;
+        }
+
+        .indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(230, 57, 70, 0.3);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+        }
+
+        .indicator.active {
+            background: #e6394a;
+            transform: scale(1.3);
+            border-color: rgba(230, 57, 70, 0.2);
+            box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1);
+        }
+
+        /* Gallery Grid Section */
+        .gallery-grid-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.2rem 2.5rem;
+            border: 2px solid #e6394a;
+            background: transparent;
+            color: #e6394a;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .tab-button.active,
+        .tab-button:hover {
+            background: linear-gradient(135deg, #e6394a, #c1121f);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            background: white;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-image {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover .gallery-image img {
+            transform: scale(1.08);
+        }
+
+        /* Remove overlays completely */
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .image-carousel-container {
+                height: 300px;
+            }
+            
+            .image-carousel {
+                height: 220px;
+            }
+            
+            .carousel-slide.center {
+                width: 280px;
+                height: 180px;
+            }
+            
+            .carousel-slide.adjacent {
+                width: 140px;
+                height: 90px;
+            }
+            
+            .carousel-slide {
+                width: 100px;
+                height: 70px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+            
+            .tab-button {
+                padding: 1rem 2rem;
+                font-size: 0.9rem;
+            }
+            
+            .carousel-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader"></div>
+
+    <div class="main-content">
+        <!-- Modern Navigation Header -->
+        <header class="modern-header">
+            <nav class="navbar-modern">
+                <div class="nav-brand">
+                    <img src="logo/Untitled design-7.png" alt="Shree Developers" class="brand-logo" style="border-radius: 15px;">
+                    <div class="brand-text">
+                        <span class="brand-name">Shree Developers</span>
+                        <span class="brand-tagline">Premium Real Estate</span>
+                    </div>
+                </div>
+                
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="about.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>About</span>
+                    </a>
+                    <a href="projects.html" class="nav-item">
+                        <i class="fas fa-building"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="services.html" class="nav-item">
+                        <i class="fas fa-cogs"></i>
+                        <span>Services</span>
+                    </a>
+                    <a href="gallery.html" class="nav-item active">
+                        <i class="fas fa-images"></i>
+                        <span>Gallery</span>
+                    </a>
+                    <a href="contact.html" class="nav-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Contact</span>
+                    </a>
+                </div>
+                
+                <div class="nav-actions">
+                    <a href="contact.html" class="btn-primary">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Book Site Visit</span>
+                    </a>
+                    <button class="mobile-menu-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Gallery Hero Section -->
+            <section class="about-hero-revolution">
+                <!-- Dynamic Background -->
+                <div class="about-hero-bg">
+                    <div class="hero-slide active" data-bg="images/hero background/pexels-vividcafe-681368.jpg"></div>
+                </div>
+                
+                <!-- Advanced Overlay System -->
+                <div class="hero-overlay-system">
+                    <div class="gradient-overlay primary"></div>
+                    <div class="gradient-overlay secondary"></div>
+                    <div class="pattern-overlay"></div>
+                </div>
+                
+                <!-- Hero Content -->
+                <div class="about-hero-content">
+                    <div class="container">
+                        <div class="about-hero-text">
+                            <div class="hero-badge">
+                                <i class="fas fa-images"></i>
+                                <span>Explore Our Premium Projects</span>
+                            </div>
+                            <h1 class="about-hero-title">Gallery</h1>
+                            <p class="about-hero-subtitle">Discover the beauty and excellence of our architectural masterpieces</p>
+                            <div class="hero-tagline">
+                                <span class="tagline-item">Premium Architecture</span>
+                                <span class="tagline-separator">|</span>
+                                <span class="tagline-item">Modern Design</span>
+                                <span class="tagline-separator">|</span>
+                                <span class="tagline-item">Quality Construction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gallery Grid Section -->
+            <section class="gallery-grid-section">
+                <div class="container">
+                    <div class="section-header text-center">
+                        <span class="section-badge">
+                            <i class="fas fa-th"></i>
+                            Project Categories
+                        </span>
+                        <h2>Browse Our Work</h2>
+                        <p class="section-subtitle">Filter and explore our projects by category</p>
+                    </div>
+                    
+                    <div class="gallery-tabs">
+                        <button class="tab-button active" data-tab="all">
+                            <i class="fas fa-th-large"></i>
+                            <span>All Projects</span>
+                        </button>
+                        <button class="tab-button" data-tab="completed">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Completed</span>
+                        </button>
+                        <button class="tab-button" data-tab="ongoing">
+                            <i class="fas fa-hammer"></i>
+                            <span>Ongoing</span>
+                        </button>
+                    </div>
+                    
+                    <div class="gallery-grid">
+                        <div class="gallery-item" data-category="completed">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-alex-qian-1180283-2343465.jpg" alt="Shree Niketan">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="ongoing">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-alex-staudinger-829197-1732414.jpg" alt="Shree Kunj">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="ongoing">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-dream_-makkerzz-1603229-30324868.jpg" alt="Shree Marinos">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="completed">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-expect-best-79873-323780.jpg" alt="Premium Interiors">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="completed">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-marketingtuig-87223.jpg" alt="Architectural Design">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="ongoing">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-pixabay-273209.jpg" alt="Construction Progress">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="completed">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-vividcafe-681368.jpg" alt="Modern Living">
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item" data-category="completed">
+                            <div class="gallery-image">
+                                <img src="images/hero background/pexels-william-lemond-25283-105933.jpg" alt="Elegant Design">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section footer-logo-section">
+                    <div class="footer-logo">
+                        <img src="logo/logo-Wbbb.png" alt="Shree Developers" class="footer-logo-img">
+                        <div class="footer-brand-text">
+                            <h3>Shree Developers</h3>
+                            <p>Premium Real Estate</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>Shree Developers</p>
+                    <p>Ground Floor, B.S. Apartment</p>
+                    <p>28, Contractors Area, Road No. 4</p>
+                    <p>Bistupur, Jamshedpur, Jharkhand – 831001</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="projects.html">Projects</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="book-visit.html">Book Site Visit</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                    <p>Email: shreedevlop@gmail.com</p>
+                    <p>Website: www.theshreedevelopers.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Shree Developers. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/main-new.js"></script>
+    <script>
+        // Gallery Carousel Functionality
+        class GalleryCarousel {
+            constructor() {
+                this.track = document.querySelector('.carousel-track');
+                this.slides = document.querySelectorAll('.carousel-slide');
+                this.indicators = document.querySelectorAll('.indicator');
+                this.prevBtn = document.querySelector('.prev-btn');
+                this.nextBtn = document.querySelector('.next-btn');
+                this.currentIndex = 3; // Start with 4th image (index 3) as center
+                this.totalSlides = this.slides.length;
+                this.slideWidth = 180; // Base slide width
+                this.slideGap = 32; // Gap between slides (2rem = 32px)
+                this.autoSlideInterval = null;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupInitialPosition();
+                this.updateSlides();
+                this.setupEventListeners();
+                this.startAutoSlide();
+            }
+            
+            setupInitialPosition() {
+                // Create duplicates for infinite scroll
+                const firstClones = [];
+                const lastClones = [];
+                
+                // Clone first 3 slides and append to end
+                for (let i = 0; i < 3; i++) {
+                    const clone = this.slides[i].cloneNode(true);
+                    clone.classList.add('clone');
+                    this.track.appendChild(clone);
+                    firstClones.push(clone);
+                }
+                
+                // Clone last 3 slides and prepend to beginning
+                for (let i = this.totalSlides - 3; i < this.totalSlides; i++) {
+                    const clone = this.slides[i].cloneNode(true);
+                    clone.classList.add('clone');
+                    this.track.insertBefore(clone, this.track.firstChild);
+                    lastClones.unshift(clone);
+                }
+                
+                // Update slides array to include clones
+                this.allSlides = document.querySelectorAll('.carousel-slide');
+                this.currentIndex = this.currentIndex + 3; // Adjust for prepended clones
+                
+                // Set initial position
+                this.updatePosition(false);
+            }
+            
+            updateSlides() {
+                // Remove all classes
+                this.allSlides.forEach(slide => {
+                    slide.classList.remove('center', 'adjacent');
+                });
+                
+                this.indicators.forEach(indicator => {
+                    indicator.classList.remove('active');
+                });
+                
+                // Set center slide
+                this.allSlides[this.currentIndex].classList.add('center');
+                
+                // Set adjacent slides
+                if (this.allSlides[this.currentIndex - 1]) {
+                    this.allSlides[this.currentIndex - 1].classList.add('adjacent');
+                }
+                if (this.allSlides[this.currentIndex + 1]) {
+                    this.allSlides[this.currentIndex + 1].classList.add('adjacent');
+                }
+                
+                // Update indicator
+                const realIndex = (this.currentIndex - 3) % this.totalSlides;
+                this.indicators[realIndex].classList.add('active');
+            }
+            
+            updatePosition(animate = true) {
+                const centerOffset = this.slideWidth * 2 + this.slideGap * 2; // Offset to center the middle slide
+                const translateX = -(this.currentIndex * (this.slideWidth + this.slideGap)) + centerOffset;
+                
+                if (animate) {
+                    this.track.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                } else {
+                    this.track.style.transition = 'none';
+                }
+                
+                this.track.style.transform = `translateX(${translateX}px)`;
+                
+                this.updateSlides();
+            }
+            
+            nextSlide() {
+                this.currentIndex++;
+                this.updatePosition();
+                
+                // Handle infinite scroll
+                if (this.currentIndex >= this.totalSlides + 3) {
+                    setTimeout(() => {
+                        this.currentIndex = 3;
+                        this.updatePosition(false);
+                    }, 800);
+                }
+            }
+            
+            prevSlide() {
+                this.currentIndex--;
+                this.updatePosition();
+                
+                // Handle infinite scroll
+                if (this.currentIndex < 3) {
+                    setTimeout(() => {
+                        this.currentIndex = this.totalSlides + 2;
+                        this.updatePosition(false);
+                    }, 800);
+                }
+            }
+            
+            goToSlide(index) {
+                this.currentIndex = index + 3; // Adjust for clones
+                this.updatePosition();
+            }
+            
+            startAutoSlide() {
+                this.autoSlideInterval = setInterval(() => {
+                    this.nextSlide();
+                }, 5000); // 5 seconds per slide
+            }
+            
+            stopAutoSlide() {
+                if (this.autoSlideInterval) {
+                    clearInterval(this.autoSlideInterval);
+                    this.autoSlideInterval = null;
+                }
+            }
+            
+            restartAutoSlide() {
+                this.stopAutoSlide();
+                this.startAutoSlide();
+            }
+            
+            setupEventListeners() {
+                // Navigation buttons
+                this.nextBtn.addEventListener('click', () => {
+                    this.nextSlide();
+                    this.restartAutoSlide();
+                });
+                
+                this.prevBtn.addEventListener('click', () => {
+                    this.prevSlide();
+                    this.restartAutoSlide();
+                });
+                
+                // Indicators
+                this.indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => {
+                        this.goToSlide(index);
+                        this.restartAutoSlide();
+                    });
+                });
+                
+                // Pause on hover
+                const carouselContainer = document.querySelector('.image-carousel-container');
+                carouselContainer.addEventListener('mouseenter', () => {
+                    this.stopAutoSlide();
+                });
+                
+                carouselContainer.addEventListener('mouseleave', () => {
+                    this.startAutoSlide();
+                });
+            }
+        }
+        
+        // Gallery Filter Functionality
+        class GalleryFilter {
+            constructor() {
+                this.tabButtons = document.querySelectorAll('.tab-button');
+                this.galleryItems = document.querySelectorAll('.gallery-item');
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                this.tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const filter = button.getAttribute('data-tab');
+                        this.filterGallery(filter);
+                        this.updateActiveTab(button);
+                    });
+                });
+            }
+            
+            filterGallery(filter) {
+                this.galleryItems.forEach(item => {
+                    const category = item.getAttribute('data-category');
+                    
+                    if (filter === 'all' || category === filter) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 100);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+            
+            updateActiveTab(activeButton) {
+                this.tabButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+                activeButton.classList.add('active');
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new GalleryCarousel();
+            new GalleryFilter();
+        });
+    </script>
+</body>
+</html>
